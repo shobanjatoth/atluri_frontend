@@ -1,0 +1,291 @@
+<!-- <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Employees | Atluri ASCEND</title><link rel="stylesheet" href="../css/style.css"></head><body><div class="portal-shell"><aside class="portal-sidebar"><a class="portal-brand" href="../home.html"><span class="brand-mark">A</span><span>ATLURI<small>ASCEND™</small></span></a><div class="portal-nav-label">ADMIN WORKSPACE</div><nav class="portal-nav"><a href="admin-dashboard.html"><span>▦</span>Overview</a><a class="active" href="employees.html"><span>♙</span>Employees</a><a href="departments.html"><span>▤</span>Departments</a><a href="attendance.html"><span>◷</span>Attendance</a><a href="reports.html"><span>▥</span>Reports</a><a href="audit-logs.html"><span>≋</span>Audit logs</a></nav><div class="portal-side-bottom">ATLURI ASCEND™<br>Admin workspace</div></aside><div class="portal-main"><header class="portal-topbar"><div><div class="top-title">Employee management</div><div class="top-sub">Create and maintain employee accounts</div></div><div class="portal-user">Administrator <button id="logoutButton" class="portal-logout">Log out</button></div></header><main class="portal-content"><div class="welcome-row"><div><h1>Employees</h1><p>Add employee details and manage the employee directory.</p></div><button class="btn primary" type="button" id="reloadEmployees">Refresh records</button></div><section class="portal-panel"><div class="portal-panel-head"><h2>Add employee</h2><span class="status-pill">POST /api/employees</span></div><form id="createEmployeeForm" class="form-grid"><label>Employee ID<input name="employee_id" required placeholder="e.g. ATL-1001"></label><label>Full name<input name="full_name" required placeholder="Employee full name"></label><label>Email<input name="email" type="email" required placeholder="name@company.com"></label><label>Phone<input name="phone" placeholder="Phone number"></label><label>Department<select name="department_id" id="employeeDepartment" required><option value="">Loading departments…</option></select></label><label>Designation<input name="designation" placeholder="e.g. Analyst"></label><label>Temporary password<input name="password" type="password" required minlength="8" placeholder="At least 8 characters"></label><label>Role<select name="role"><option value="employee">Employee</option><option value="admin">Admin</option></select></label><div class="form-actions"><button class="btn primary" type="submit">Create employee</button></div></form><div id="employeeCreateMessage" class="message" role="status"></div></section><section class="portal-panel" style="margin-top:18px"><div class="portal-panel-head"><h2>Employee directory</h2><input id="tableSearch" placeholder="Search employees…" aria-label="Search employees"></div><div class="table-scroll"><table class="portal-table" id="dataTable" class="portal-table"><thead><tr><th>Employee ID</th><th>Name</th><th>Email</th><th>Department</th><th>Status</th><th>Action</th></tr></thead><tbody><tr><td colspan="6">Loading employees…</td></tr></tbody></table></div><div id="employeeListMessage" class="message" role="status"></div></section></main></div></div><script src="../js/config.js"></script><script src="../js/api.js"></script><script src="../js/app.js"></script></body></html> -->
+
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Employees | Atluri ASCEND</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="portal-shell">
+
+        <!-- Admin sidebar -->
+        <aside class="portal-sidebar">
+            <a class="portal-brand" href="../home.html">
+                <span class="brand-mark">A</span>
+                <span>
+                    ATLURI
+                    <small>ASCEND™</small>
+                </span>
+            </a>
+
+            <div class="portal-nav-label">ADMIN WORKSPACE</div>
+
+            <nav class="portal-nav">
+                <a href="admin-dashboard.html">
+                    <span>▦</span> Overview
+                </a>
+
+                <a class="active" href="employees.html">
+                    <span>♙</span> Employees
+                </a>
+
+                <a href="departments.html">
+                    <span>▤</span> Departments
+                </a>
+
+                <a href="attendance.html">
+                    <span>◷</span> Attendance
+                </a>
+
+                <a href="reports.html">
+                    <span>▥</span> Reports
+                </a>
+
+                <a href="audit-logs.html">
+                    <span>≋</span> Audit logs
+                </a>
+            </nav>
+
+            <div class="portal-side-bottom">
+                ATLURI ASCEND™<br>
+                Admin workspace
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <div class="portal-main">
+
+            <header class="portal-topbar">
+                <div>
+                    <div class="top-title">Employee management</div>
+                    <div class="top-sub">
+                        Create and maintain employee accounts
+                    </div>
+                </div>
+
+                <div class="portal-user">
+                    Administrator
+                    <button
+                        id="logoutButton"
+                        class="portal-logout"
+                        type="button"
+                    >
+                        Log out
+                    </button>
+                </div>
+            </header>
+
+            <main class="portal-content">
+
+                <!-- Page heading -->
+                <div class="welcome-row">
+                    <div>
+                        <h1>Employees</h1>
+                        <p>
+                            Add employee details and manage the employee directory.
+                        </p>
+                    </div>
+
+                    <button
+                        class="btn primary"
+                        type="button"
+                        id="reloadEmployees"
+                    >
+                        Refresh records
+                    </button>
+                </div>
+
+                <!-- Create employee form -->
+                <section class="portal-panel">
+
+                    <div class="portal-panel-head">
+                        <h2>Add employee</h2>
+                        <span class="status-pill">
+                            POST /api/employees
+                        </span>
+                    </div>
+
+                    <form
+                        id="createEmployeeForm"
+                        class="form-grid"
+                    >
+
+                        <label>
+                            Employee ID
+                            <input
+                                type="text"
+                                name="employee_code"
+                                required
+                                placeholder="e.g. ATL-1001"
+                            >
+                        </label>
+
+                        <label>
+                            Username
+                            <input
+                                type="text"
+                                name="username"
+                                required
+                                placeholder="Choose a login username"
+                                autocomplete="username"
+                            >
+                        </label>
+
+                        <label>
+                            Full name
+                            <input
+                                type="text"
+                                name="name"
+                                required
+                                placeholder="Employee full name"
+                                autocomplete="name"
+                            >
+                        </label>
+
+                        <label>
+                            Email
+                            <input
+                                type="email"
+                                name="email"
+                                required
+                                placeholder="name@company.com"
+                                autocomplete="email"
+                            >
+                        </label>
+
+                        <label>
+                            Phone
+                            <input
+                                type="tel"
+                                name="phone"
+                                placeholder="Phone number"
+                                autocomplete="tel"
+                            >
+                        </label>
+
+                        <label>
+                            Department
+                            <select
+                                name="department_id"
+                                id="employeeDepartment"
+                                required
+                            >
+                                <option value="">
+                                    Loading departments…
+                                </option>
+                            </select>
+                        </label>
+
+                        <label>
+                            Designation
+                            <input
+                                type="text"
+                                name="designation"
+                                placeholder="e.g. Analyst"
+                            >
+                        </label>
+
+                        <label>
+                            Temporary password
+                            <input
+                                type="password"
+                                name="password"
+                                required
+                                minlength="8"
+                                placeholder="At least 8 characters"
+                                autocomplete="new-password"
+                            >
+                        </label>
+
+                        <div class="form-actions">
+                            <button
+                                class="btn primary"
+                                type="submit"
+                            >
+                                Create employee
+                            </button>
+                        </div>
+
+                    </form>
+
+                    <div
+                        id="employeeCreateMessage"
+                        class="message"
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+                </section>
+
+                <!-- Employee directory -->
+                <section
+                    class="portal-panel"
+                    style="margin-top:18px"
+                >
+
+                    <div class="portal-panel-head">
+                        <h2>Employee directory</h2>
+
+                        <input
+                            id="tableSearch"
+                            type="search"
+                            placeholder="Search employees…"
+                            aria-label="Search employees"
+                        >
+                    </div>
+
+                    <div class="table-scroll">
+                        <table
+                            class="portal-table"
+                            id="dataTable"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">
+                                        Loading employees…
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div
+                        id="employeeListMessage"
+                        class="message"
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- JavaScript dependencies -->
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/app.js"></script>
+
+</body>
+</html>
