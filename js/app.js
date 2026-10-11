@@ -1350,45 +1350,98 @@
         }
     }
 
-    async function loadAudit() {
-        const body = $('#dataTable tbody');
+    // async function loadAudit() {
+    //     const body = $('#dataTable tbody');
 
-        if (!body || !location.pathname.endsWith('audit-logs.html')) {
-            return;
-        }
+    //     if (!body || !location.pathname.endsWith('audit-logs.html')) {
+    //         return;
+    //     }
 
-        try {
-            const list = rows(await API.get('/api/audit'));
+    //     try {
+    //         const list = rows(await API.get('/api/audit'));
 
-            body.innerHTML = list.length
-                ? list.map(row =>
-                    '<tr>' +
-                    '<td>' + esc(asDate(pick(row, [
-                        'created_at', 'timestamp', 'time', 'occurred_at'
-                    ], ''))) + '</td>' +
-                    '<td>' + esc(pick(row, [
-                        'actor_name', 'username', 'user_id', 'actor'
-                    ])) + '</td>' +
-                    '<td>' + esc(pick(row, [
-                        'action', 'event', 'event_type'
-                    ])) + '</td>' +
-                    '<td>' + esc(pick(row, [
-                        'resource', 'entity', 'target'
-                    ])) + '</td>' +
-                    '<td>' + esc(pick(row, [
-                        'details', 'message', 'description'
-                    ])) + '</td>' +
-                    '</tr>'
-                ).join('')
-                : '<tr><td colspan="5">No audit logs returned.</td></tr>';
+    //         body.innerHTML = list.length
+    //             ? list.map(row =>
+    //                 '<tr>' +
+    //                 '<td>' + esc(asDate(pick(row, [
+    //                     'created_at', 'timestamp', 'time', 'occurred_at'
+    //                 ], ''))) + '</td>' +
+    //                 '<td>' + esc(pick(row, [
+    //                     'actor_name', 'username', 'user_id', 'actor'
+    //                 ])) + '</td>' +
+    //                 '<td>' + esc(pick(row, [
+    //                     'action', 'event', 'event_type'
+    //                 ])) + '</td>' +
+    //                 '<td>' + esc(pick(row, [
+    //                     'resource', 'entity', 'target'
+    //                 ])) + '</td>' +
+    //                 '<td>' + esc(pick(row, [
+    //                     'details', 'message', 'description'
+    //                 ])) + '</td>' +
+    //                 '</tr>'
+    //             ).join('')
+    //             : '<tr><td colspan="5">No audit logs returned.</td></tr>';
 
-        } catch (error) {
-            body.innerHTML =
-                '<tr><td colspan="5">Could not load audit logs: ' +
-                esc(error.message) +
-                '</td></tr>';
-        }
+    //     } catch (error) {
+    //         body.innerHTML =
+    //             '<tr><td colspan="5">Could not load audit logs: ' +
+    //             esc(error.message) +
+    //             '</td></tr>';
+    //     }
+    // }
+
+
+    
+async function loadAudit() {
+    const body = $('#dataTable tbody');
+
+    if (!body) {
+        console.warn('[ASCEND] Audit logs table body not found.');
+        return;
     }
+
+    try {
+        const response = await API.get('/api/audit');
+        const list = rows(response);
+
+        console.log('[ASCEND] Audit records loaded:', list.length);
+
+        body.innerHTML = list.length
+            ? list.map(row =>
+                '<tr>' +
+                '<td>' + esc(asDate(pick(row, [
+                    'created_at', 'timestamp', 'time', 'occurred_at'
+                ], ''))) + '</td>' +
+
+                '<td>' + esc(pick(row, [
+                    'actor_name', 'username', 'user_id', 'actor'
+                ], 'Unknown')) + '</td>' +
+
+                '<td>' + esc(pick(row, [
+                    'action', 'event', 'event_type'
+                ], '—')) + '</td>' +
+
+                '<td>' + esc(pick(row, [
+                    'resource', 'entity', 'target'
+                ], '—')) + '</td>' +
+
+                '<td>' + esc(pick(row, [
+                    'details', 'message', 'description'
+                ], '—')) + '</td>' +
+                '</tr>'
+            ).join('')
+            : '<tr><td colspan="5">No audit logs returned.</td></tr>';
+
+    } catch (error) {
+        console.error('[ASCEND] Failed to load audit logs:', error);
+
+        body.innerHTML =
+            '<tr><td colspan="5">Could not load audit logs: ' +
+            esc(error.message) +
+            '</td></tr>';
+    }
+}
+
 
     async function loadProfile() {
         const targets = [
