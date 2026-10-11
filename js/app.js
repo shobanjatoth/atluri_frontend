@@ -916,47 +916,61 @@
             video.srcObject = null;
         }
     }
-
+    
     async function loadPage() {
-        const page = location.pathname.split('/').pop();
+    // Support both /employees and /employees.html
+    const page = location.pathname
+        .split("/")
+        .pop()
+        .replace(/\.html$/i, "");
 
-        if (page === 'admin-dashboard.html') {
-            loadDashboard();
-        }
+    console.log("[ASCEND] Loading page:", page);
 
-        if (page === 'employees.html') {
+    switch (page) {
+        case "admin-dashboard":
+            await loadDashboard();
+            break;
+
+        case "employees":
             await loadDepartments(true);
             await loadEmployees();
-        }
+            break;
 
-        if (page === 'departments.html') {
-            loadDepartments(false);
-        }
+        case "departments":
+            await loadDepartments(false);
+            break;
 
-        if (page === 'audit-logs.html') {
-            loadAudit();
-        }
+        case "audit-logs":
+            await loadAudit();
+            break;
 
-        if (page === 'employee-profile.html') {
-            loadProfile();
-        }
+        case "employee-profile":
+            await loadProfile();
+            break;
 
-        if (page === 'employee-dashboard.html') {
-            loadEmployeeDashboard();
-        }
+        case "employee-dashboard":
+            await loadEmployeeDashboard();
+            break;
 
-        if (page === 'employee-attendance.html') {
-            loadMyAttendance();
-        }
+        case "employee-attendance":
+            await loadMyAttendance();
+            break;
 
-        if (page === 'attendance.html') {
-            loadAttendance();
-        }
+        case "attendance":
+            await loadAttendance();
+            break;
 
-        if (page === 'reports.html') {
-            loadReports();
-        }
+        case "reports":
+            await loadReports();
+            break;
+
+        default:
+            console.info(
+                "[ASCEND] No data loader registered for:",
+                page
+            );
     }
+}
 
     async function loadDashboard() {
         try {
